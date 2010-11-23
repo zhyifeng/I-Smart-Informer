@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/RelativeLayout01" 
+      android:layout_width="fill_parent" 
+      android:layout_height="fill_parent"
+      >
+<TabHost android:id="@android:id/tabhost"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_above="@+id/GridView_toolbar"
+         android:layout_alignParentTop="true">
+<LinearLayout android:orientation="vertical"
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content">
+         <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" ></TabWidget>
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <ListView android:id="@+id/ListView_college" 
+                      android:layout_width="fill_parent" 
+                      android:layout_height="wrap_content">
+                      </ListView>
+            <ListView android:id="@+id/ListView_school" 
+                      android:layout_width="fill_parent" 
+                      android:layout_height="wrap_content">
+                      </ListView>
+            <ListView android:id="@+id/ListView_class" 
+                      android:layout_width="fill_parent" 
+                      android:layout_height="wrap_content">
+                      </ListView>
+</FrameLayout>
+</LinearLayout>
+</TabHost>
+<GridView android:id="@+id/GridView_toolbar" 
+          android:layout_alignParentBottom="true" 
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content">
+          </GridView>
+</RelativeLayout>
