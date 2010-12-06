@@ -13,7 +13,10 @@
         </activity>
         <activity android:name=".InfoUI"></activity>
         <activity android:name=".SearchUI"></activity>
+        <activity android:name=".ReminderUI"></activity>
+        <activity android:name=".SysSettingUI"></activity>
+        <activity android:name=".InfoDetailUI"></activity>
     </application>
-    <uses-sdk android:minSdkVersion="3" />
+    <uses-sdk android:minSdkVersion="8" />
 
 </manifest> 

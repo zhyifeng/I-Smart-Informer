@@ -35,7 +35,7 @@
 </FrameLayout>
 </LinearLayout>
 </TabHost>
-<GridView android:id="@+id/GridView_toolbar" 
+<GridView android:id="@+id/GridView_toolbar_info" 
           android:layout_alignParentBottom="true" 
           android:layout_width="wrap_content" 
           android:layout_height="wrap_content">

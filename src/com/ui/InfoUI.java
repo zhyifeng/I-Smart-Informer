@@ -2,106 +2,64 @@ package com.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import android.app.TabActivity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TabHost;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
-public class InfoUI extends TabActivity{
-	
-    private TabHost mTabHost;
-    private GridView toolbarGrid;
-    private ListView mListCollege;
-    
-    /*-- Toolbar底部菜单选项下标--*/
-	private final int TOOLBAR_ITEM_INFO = 0;// 消息
-	private final int TOOLBAR_ITEM_SEARCH = 1;// 搜索
-	private final int TOOLBAR_ITEM_REMINDSETTING = 2;// 提醒设置
-	private final int TOOLBAR_ITEM_SYSSETTING = 3;// 账号设置
-	private final int TOOLBAR_ITEM_QUIT = 4;// 退出
-	
+public class InfoUI extends TabActivity {
+
+	private TabHost mTabHost;
+	private ToolbarInitialier toolbarInitialier;
+
 	/*--底部菜单图片--*/
-	int[] menu_toolbar_image_array = {R.drawable.menu_info, R.drawable.menu_search,
-			R.drawable.menu_remindsetting, R.drawable.menu_syssettings, R.drawable.menu_quit};
-	
+	int[] menu_toolbar_image_array1 = { R.drawable.menu_info,
+			R.drawable.menu_search, R.drawable.menu_remindsetting,
+			R.drawable.menu_syssettings, R.drawable.menu_quit,
+			R.drawable.menu_info, R.drawable.menu_search,
+			R.drawable.menu_remindsetting, R.drawable.menu_syssettings,
+			R.drawable.menu_quit ,R.drawable.menu_quit};
+
 	/*--底部菜单文字--*/
-	String[] menu_toolbar_name_array = {"消息", "搜索", "提醒", "账号", "退出"};
-	
-	/*--底部菜单图片--*/
-	int[] menu_toolbar_image_array1 = {R.drawable.menu_info, R.drawable.menu_search,
-			R.drawable.menu_remindsetting, R.drawable.menu_syssettings, R.drawable.menu_quit, R.drawable.menu_info, R.drawable.menu_search,
-			R.drawable.menu_remindsetting, R.drawable.menu_syssettings, R.drawable.menu_quit};
-	
-	/*--底部菜单文字--*/
-	String[] menu_toolbar_name_array1 = {"消息", "搜索", "提醒", "账号", "退出","消息", "搜索", "提醒", "账号", "退出"};
-	
+	String[] menu_toolbar_name_array1 = { "消息", "搜索", "提醒", "账号", "退出", "消息",
+			"搜索", "提醒", "账号", "退出" ,"退出"};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		 setContentView(R.layout.infoui);
-		
-		 mTabHost = getTabHost();
-		    
-		 mTabHost.addTab(mTabHost.newTabSpec("tab_test1").setIndicator("学校").setContent(R.id.ListView_college));
-		 mTabHost.addTab(mTabHost.newTabSpec("tab_test2").setIndicator("学院").setContent(R.id.ListView_school));
-		 mTabHost.addTab(mTabHost.newTabSpec("tab_test3").setIndicator("班级").setContent(R.id.ListView_class));
-		    
-		 mTabHost.setCurrentTab(0);
-         
-			// 创建底部菜单 Toolbar
-			toolbarGrid = (GridView) findViewById(R.id.GridView_toolbar);
-			toolbarGrid.setBackgroundResource(R.drawable.channelgallery_bg);// 设置背景
-			toolbarGrid.setNumColumns(5);// 设置每行列数
-			toolbarGrid.setGravity(Gravity.CENTER);// 位置居中
-			toolbarGrid.setVerticalSpacing(10);// 垂直间隔
-			toolbarGrid.setHorizontalSpacing(10);// 水平间隔
-			toolbarGrid.setAdapter(getMenuAdapter(menu_toolbar_name_array,
-					menu_toolbar_image_array));// 设置菜单Adapter
-			/** 监听底部菜单选项 **/
-			toolbarGrid.setOnItemClickListener(new OnItemClickListener() {
-				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-						long arg3) {
-					Toast.makeText(InfoUI.this,
-							menu_toolbar_name_array[arg2], Toast.LENGTH_SHORT)
-							.show();
-					switch (arg2) {
-					case TOOLBAR_ITEM_INFO:
-						break;
-					case TOOLBAR_ITEM_SEARCH:
-					{
-						Intent intent = new Intent();
-						intent.setClass(InfoUI.this, SearchUI.class);
-						startActivity(intent);
-					}
-						break;
-					case TOOLBAR_ITEM_REMINDSETTING:
+		setContentView(R.layout.infoui);
 
-						break;
-					case TOOLBAR_ITEM_SYSSETTING:
+		mTabHost = getTabHost();
 
-						break;
-					case TOOLBAR_ITEM_QUIT:
-						android.os.Process.killProcess(android.os.Process.myPid()); 
-						break;
-					}
-				}
-			});
-			
-		//设定学校标签下的内容格式	
-		mListCollege = (ListView)findViewById(R.id.ListView_college);
-		mListCollege.setAdapter(getMenuAdapter(menu_toolbar_name_array1, menu_toolbar_image_array1));
+		mTabHost.addTab(mTabHost.newTabSpec("tab_test1").setIndicator("学校")
+				.setContent(R.id.ListView_college));
+		mTabHost.addTab(mTabHost.newTabSpec("tab_test2").setIndicator("学院")
+				.setContent(R.id.ListView_school));
+		mTabHost.addTab(mTabHost.newTabSpec("tab_test3").setIndicator("班级")
+				.setContent(R.id.ListView_class));
+
+		mTabHost.setCurrentTab(0);
+		toolbarInitialier = new ToolbarInitialier(R.id.GridView_toolbar_info,
+				this);
+		toolbarInitialier.InitialtoToolbar();
+
+		// 设定学校标签下的内容格式
+		ListView mListCollege = (ListView) findViewById(R.id.ListView_college);
+		mListCollege.setAdapter(getMenuAdapter(menu_toolbar_name_array1,
+				menu_toolbar_image_array1));
+
+		// 设定学院标签下的内容格式
+		ListView mListSchool = (ListView) findViewById(R.id.ListView_school);
+		mListSchool.setAdapter(getMenuAdapter(menu_toolbar_name_array1,
+				menu_toolbar_image_array1));
+
+		// 设定班级标签下的内容格式
+		ListView mListClass = (ListView) findViewById(R.id.ListView_class);
+		mListClass.setAdapter(getMenuAdapter(menu_toolbar_name_array1,
+				menu_toolbar_image_array1));
 	}
-    
+
 	/**
 	 * 构造菜单Adapter
 	 * 
