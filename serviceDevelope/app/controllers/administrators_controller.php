@@ -4,6 +4,15 @@ class AdministratorsController extends AppController {
 	var $name = 'Administrators';
 	var $components = array('Acl');
 
+	function login(){
+		if($this->canLogin()){
+			$this->writeAdministratorToSession();
+			$this->redirectToProperPageIfsuccessfullyLogin();
+		}
+		else
+			$this->Session->setFlash(__('Invalid login, please check your username and password or logout first if you have logined', true));
+	}
+	
 	function canLogin(){
 		if($this->hasLogined())
 			return false;
@@ -28,9 +37,9 @@ class AdministratorsController extends AppController {
 	}
 	
 	function isTheAdministratorExist(){
-		$administratorFoundAllRelated = $this->getAdministratorByNameFromLogin();
-		if(!empty($administratorFoundAllRelated))
-			return true;
+		$administratorFound = $this->getAdministratorByNameFromLogin();
+		if($administratorFound != null)
+			return $administratorFound['exist'];
 		else
 			return false;
 	}
@@ -45,7 +54,7 @@ class AdministratorsController extends AppController {
 		return $administratorChecked['password'] == $this->data['Administrator']['password'];
 	}
 	
-	function redirectToProperPageLogin(){
+	function redirectToProperPageIfSuccessfullyLogin(){
 		if($this->isSuperAdministrator())
 			$this->redirect(array('action' => 'index'));
 		else
@@ -67,17 +76,7 @@ class AdministratorsController extends AppController {
 		$administratorGot = $this->getAdministratorByNameFromLogin();
 		$this->Session->write('administrator', $administratorGot);
 	}
-	
-	function login(){
-		if($this->canLogin()){
-			$this->writeAdministratorToSession();
-			$this->redirectToProperPageLogin();
-			
-			//$this->set('administratora', $this->Session->read('administrator'));
-		}
-		else
-			$this->set('error', true);
-	}
+	//*******************************************************logout*****************************************
 	
 	function logout(){
 		$this->clearAdministratorInSession();
@@ -89,56 +88,117 @@ class AdministratorsController extends AppController {
 	}
 	
 	function redirectToProperPageLogout(){
-		$this->redirect(array('action' => 'login'), null, true);
+		$this->redirect(array('action' => 'login'));
+	}//***************************************************index***********************************************
+	function index() {
+		if($this->canViewAdministratorList())
+			$this->indexAdministrators();
+		else{
+			$this->Session->setFlash(__('You have no right to view the administrator list', true));
+			$this->redirect(array('action' => 'logout'));
+		}
+	}
+
+	function canViewAdministratorList(){
+		return $this->hasLogined() && $this->isSuperAdministrator();
 	}
 	
-	function index() {
-		if($this->Session->read('administrator')){
-			$this->Administrator->recursive = 0;
-			$this->set('administrators', $this->paginate());
+	function indexAdministrators(){
+		$this->Administrator->recursive = 0;
+		$this->set('administrators', $this->paginate());
+	}
+		//************************************************view***************************************************
+	function view($administratorId = null) {
+		if($this->canView($administratorId))
+			$this->viewAdministrator($administratorId);
+		else{
+			$this->Session->setFlash(__('Invalid administrator or you have no right to view administrators', true));
+			$this->redirect(array('controller' => 'News', 'action' => 'index'));
 		}
+	}
+
+	function canView($administratorId){
+		return $this->hasLogined() && $this->isSuperAdministrator() && $this->isExistAdministrator($administratorId);
+	}
+	
+	function isExistAdministrator($administratorId){
+		$administratorFoundAllRelated = $this->Administrator->findById($administratorId);
+		$administratorFound = $administratorFoundAllRelated['Administrator'];
+		
+		if($administratorFound != null)
+			return $administratorFound['exist'];
 		else
-			$this->redirect(array('action' => 'login'), null, true);
+			return false;
 	}
-
-	function view($id = null) {
-		if (!$id) {
-			$this->Session->setFlash(__('Invalid administrator', true));
-			$this->redirect(array('action' => 'index'));
-		}
-		$this->set('administrator', $this->Administrator->read(null, $id));
+	
+	function viewAdministrator($administratorId){
+		$this->set('administrator', $this->Administrator->read(null, $administratorId));
 	}
-
+	
+//************************************************add*******************************************************	
 	function add() {
-		if($this->Acl->check($this->Session->read('administrator'), 'controllers/Administrators/add')){
-		if (!empty($this->data)) {
-			$this->Administrator->create();
-			if ($this->Administrator->save($this->data)) {
-			
-				$parent = $this->Acl->Aro->findByAlias('Normals');
-				$this->Acl->Aro->create(array(
-					'alias' => $this->data['Administrator']['name'],
-					'model' => 'Administrator',
-					'foreign_key' => $this->Administrator->id,
-					'parent_id' => $parent['Aro']['id'])
-				);
-				$this->Acl->Aro->save();
-				
-				
-				$this->Session->setFlash(__('The administrator has been saved', true));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The administrator could not be saved. Please, try again.', true));
-			}
+		if($this->canAdd())
+			$this->addAdministratorAndRedirectToProperPageIfSuccessfullyAdd();
+		else{
+			$this->Session->setFlash(__('You have no right to add administrator', true));
+			$this->redirect(array('controller' => 'News', 'action' => 'index'));
 		}
+	}
+	
+	function canAdd(){
+		return $this->hasLogined() && $this->isSuperAdministrator();
+	}
+	
+	function addAdministratorAndRedirectToProperPageIfSuccessfullyAdd(){
+		if (!empty($this->data)){
+			$addSuccessfully = $this->addAdministratorSuccessfully();
+			$this->redirectToProperPageAdd($addSuccessfully);
+		}
+		
 		$groups = $this->Administrator->Group->find('list');
 		$this->set(compact('groups'));
-		}
-		else{
-			$this->Session->setFlash('Dead!');
-			$this->redirect(array('action' => 'index'), null, true);
-			}
 	}
+	
+	function addAdministratorSuccessfully(){
+		$this->Administrator->create(array(('name') => $this->data['Administrator']['name'],
+										   ('password') => $this->data['Administrator']['password'],
+										   ('exist') => true,
+										   ('group_id') => $this->data['Administrator']['group_id']
+										   )
+							        );	
+		$success = $this->Administrator->save();
+		if($success)
+			$this->addNewAdministratorToAro($this->data['Administrator']['name']);
+	
+		return $success;
+	}
+	
+	function addNewAdministratorToAro($administratorName){
+		$parent = $this->Acl->Aro->findByAlias('Normals');
+		$administratorFound = $this->getAdministratorByName($administratorName);
+		
+		$this->Acl->Aro->create(array(('alias') => $administratorName,
+									  ('model') => 'Administrator',
+					                  ('foreign_key') => $administratorFound['id'],
+					                  ('parent_id') => $parent['Aro']['id']
+									 )
+				               );
+		$this->Acl->Aro->save();
+	}
+	
+	function getAdministratorByName($administratorName){
+		$administratorFoundAllRelated = $this->Administrator->findByName($administratorName);
+		$administratorFound = $administratorFoundAllRelated['Administrator'];
+	}
+	
+	function redirectToProperPageAdd($addSuccessfully){
+		if($addSuccessfully){
+			$this->Session->setFlash(__('The administrator has been saved', true));
+			$this->redirect(array('action' => 'index'));
+		}
+		else
+			$this->Session->setFlash(__('The administrator could not be saved. Please, try again.', true));
+	}//*******************************************edit*****************************************
 
 	function edit($id = null) {
 		if (!$id && empty($this->data)) {
