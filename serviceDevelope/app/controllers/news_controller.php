@@ -20,29 +20,11 @@ class NewsController extends AppController {
 	}
 	
 	function canViewTheNewsList(){
-		return $this->hasLogined() && $this->isNormalAdministrator();
+		return $this->isNormalAdministrator();
 	}
 	
 	function indexRelatedNews($administratorId){
 		$this->set('news', $this->indexNewsByAdministratorIdPaginated($administratorId));
-	}
-	
-	function hasLogined(){
-		if($this->Session->read('administrator') == NULL)
-			return false;
-		else
-			return true;
-	}
-	
-	function isNormalAdministrator(){
-		$administratorName = $this->Session->read('administrator.name');
-		$administratorAro = $this->Acl->Aro->findByAlias($administratorName);
-		$administratorAroParent = $this->Acl->Aro->findById($administratorAro['Aro']['parent_id']);
-		
-		if($administratorAroParent['Aro']['alias'] == "Normals")
-			return true;
-		else
-			return false;
 	}
 	
 	function indexNewsByAdministratorIdPaginated($administratorId){
@@ -54,6 +36,11 @@ class NewsController extends AppController {
 
 //************************************************view*****************************************************	
 	function view($newsId = null) {
+		if($this->isNotExistNews($newsId)){
+			$this->Session->setFlash(__('Invalid news', true));
+			$this->redirect(array('action' => 'index'));
+		}
+		
 		if($this->canView($newsId))
 			$this->viewNews($newsId);
 		else{
@@ -61,9 +48,21 @@ class NewsController extends AppController {
 			$this->redirect(array('action' => 'index'));
 		}
 	}
+	
+	function isExistNews($newsId){
+		$newsAllRelated = $this->News->findById($newsId);
+		if($newsAllRelated != null)
+			return true;
+		else
+			return false;
+	}
+	
+	function isNotExistNews($newsId){
+		return !$this->isExistNews($newsId);
+	}
 
 	function canView($newsId){
-		if($this->hasLogined() && $this->isNormalAdministrator()){
+		if($this->isNormalAdministrator()){
 			$administrator = $this->Session->read('administrator');
 			return $this->isNewsSender($administrator, $newsId);
 		}
@@ -82,6 +81,11 @@ class NewsController extends AppController {
 	}
 	//****************************************ADD******************************************************************
 	function add() {
+		if(!empty($this->data))
+			$this->doAdd();
+	}
+	
+	function doAdd(){
 		if($this->canAdd())
 			$this->addNewsAndRedirectToProperPageIfSuccessfullyAdd();
 		else{
@@ -95,13 +99,8 @@ class NewsController extends AppController {
 	}
 	
 	function addNewsAndRedirectToProperPageIfSuccessfullyAdd(){	
-		if (!empty($this->data)) {
-			$addSuccessfully = $this->addNewsSuccessfully();
-			$this->redirectToProperPageAdd($addSuccessfully);
-		}
-		
-		//$administrators = $this->News->Administrator->find('list');
-		//$this->set(compact('administrators'));
+		$addSuccessfully = $this->addNewsSuccessfully();
+		$this->redirectToProperPageAdd($addSuccessfully);
 	}	
 	
 	function addNewsSuccessfully(){
@@ -123,18 +122,28 @@ class NewsController extends AppController {
 	}
 //***************************************Edit*****************************************************	
 	function edit($newsId = null) {
-		if($this->canEdit($newsId)){
-			//echo "dfk";
-			$this->editNewsAndRedirectToProperPageIfSuccesfullyEdit($newsId);
+		if($this->isNotExistNews($newsId)){
+			$this->Session->setFlash(__('Invalid news', true));
+			$this->redirect(array('action' => 'index'));
 		}
+		
+		if(!empty($this->data))
+			$this->doEdit($newsId);
+		else
+			$this->data = $this->News->read(null, $newsId);
+	}
+	
+	function doEdit($newsId){
+		if($this->canEdit($newsId))
+			$this->editNewsAndRedirectToProperPageIfSuccesfullyEdit();
 		else{
-			$this->Session->setFlash(__('Invalid news or you have no right to edit the news', true));
+			$this->Session->setFlash(__('You have no right to edit the news', true));
 			$this->redirect(array('action' => 'index'));
 		}
 	}
 
 	function canEdit($newsId){
-		if($this->hasLogined() && $this->isNormalAdministrator()){
+		if($this->isNormalAdministrator()){
 			$administrator = $this->Session->read('administrator');
 			return $this->isNewsSender($administrator, $newsId);
 		}
@@ -143,13 +152,9 @@ class NewsController extends AppController {
 	}
 	
 	
-	function editNewsAndRedirectToProperPageIfSuccesfullyEdit($newsId){
-		if(!empty($this->data)){
-			$editSuccessfully = $this->editNewsSucessfully();
-			$this->redirectToProperPageEdit($editSuccessfully);
-		}
-		
-		$this->data = $this->News->read(null, $newsId);
+	function editNewsAndRedirectToProperPageIfSuccesfullyEdit(){
+		$editSuccessfully = $this->editNewsSucessfully();
+		$this->redirectToProperPageEdit($editSuccessfully);
 	}
 	
 	function editNewsSucessfully(){
@@ -167,17 +172,21 @@ class NewsController extends AppController {
 	
 //********************************************delete*******************************************	
 	function delete($newsId = null) {
+		if($this->isNotExistNews($newsId)){
+			$this->Session->setFlash(__('Invalid news', true));
+			$this->redirect(array('action' => 'index'));
+		}
 		
 		if($this->canDelete($newsId))
 			$this->deleteNewsAndRedirectToProperPageIfSuccesfullyDelete($newsId);
 		else{
-			$this->Session->setFlash(__('Invalid id for news or you have no right to delete the news', true));
+			$this->Session->setFlash(__('You have no right to delete the news', true));
 			$this->redirect(array('action' => 'index'));
 		}
 	}
 	
 	function canDelete($newsId){
-		if($this->hasLogined() && $this->isNormalAdministrator()){
+		if($this->isNormalAdministrator()){
 			$administrator = $this->Session->read('administrator');
 			return $this->isNewsSender($administrator, $newsId);
 		}
@@ -204,6 +213,5 @@ class NewsController extends AppController {
 			$this->redirect(array('action' => 'index'));
 		}
 	}
-	
 }
 ?>
