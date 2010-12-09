@@ -3,7 +3,7 @@
 	<fieldset>
  		<legend><?php __('Add Student'); ?></legend>
 	<?php
-		echo $this->Form->input('studentName');
+		echo $this->Form->input('name');
 		echo $this->Form->input('password');
 		echo $this->Form->input('group_id');
 	?>

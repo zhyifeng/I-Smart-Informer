@@ -51,9 +51,8 @@
 	<h3><?php __('Actions'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('New Administrator', true), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Groups', true), array('controller' => 'groups', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Group', true), array('controller' => 'groups', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List News', true), array('controller' => 'news', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New News', true), array('controller' => 'news', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Groups', true), array('controller' => 'groups', 'action' => 'index')); ?> </li>	
+		<li><?php echo $this->Html->link(__('List GroupTypes', true), array('controller' => 'group_types', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('List GroupRelations', true), array('controller' => 'group_relations', 'action' => 'index')); ?> </li>	
 	</ul>
 </div>
