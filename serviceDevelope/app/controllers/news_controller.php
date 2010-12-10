@@ -2,32 +2,19 @@
 class NewsController extends AppController {
 
 	var $name = 'News';
-	var $components = array('Acl');
-	var $helpers = array('Html', 'Form');
+	//var $components = array('Acl');
+	//var $helpers = array('Html', 'Form');
 
 	function index() {
-		if($this->canViewTheNewsList()){
-			$administratorId = $this->Session->read('administrator.id');
-			$this->indexRelatedNews($administratorId);
-		}
-		else{
-			$this->Session->setFlash(__('You have no right to view the news listed', true));
-			$this->redirect(array('controller' => 'Administrators', 'action' => 'index'));
-		}
-			
-		//$this->News->recursive = 0;
-		//$this->set('news', $this->paginate());
-	}
-	
-	function canViewTheNewsList(){
-		return $this->isNormalAdministrator();
+		$administratorId = $this->Session->read('administrator.id');
+		$this->indexRelatedNews($administratorId);
 	}
 	
 	function indexRelatedNews($administratorId){
-		$this->set('news', $this->indexNewsByAdministratorIdPaginated($administratorId));
+		$this->set('news', $this->indexRelatedNewsPaginated($administratorId));
 	}
 	
-	function indexNewsByAdministratorIdPaginated($administratorId){
+	function indexRelatedNewsPaginated($administratorId){
 		$newsCondition = array('administrator_id' => $administratorId);
 		$newsBelongedToAdministratorPaginated = $this->paginate(array($newsCondition));
 		
@@ -44,7 +31,7 @@ class NewsController extends AppController {
 		if($this->canView($newsId))
 			$this->viewNews($newsId);
 		else{
-			$this->Session->setFlash(__('Invalid news or you have no right to view the news', true));
+			$this->Session->setFlash(__('You have no right to view the news', true));
 			$this->redirect(array('action' => 'index'));
 		}
 	}
@@ -62,12 +49,8 @@ class NewsController extends AppController {
 	}
 
 	function canView($newsId){
-		if($this->isNormalAdministrator()){
-			$administrator = $this->Session->read('administrator');
-			return $this->isNewsSender($administrator, $newsId);
-		}
-		else
-			return false;
+		$administrator = $this->Session->read('administrator');
+		return $this->isNewsSender($administrator, $newsId);
 	}
 	
 	function isNewsSender($administrator, $newsId){
@@ -82,20 +65,7 @@ class NewsController extends AppController {
 	//****************************************ADD******************************************************************
 	function add() {
 		if(!empty($this->data))
-			$this->doAdd();
-	}
-	
-	function doAdd(){
-		if($this->canAdd())
 			$this->addNewsAndRedirectToProperPageIfSuccessfullyAdd();
-		else{
-			$this->Session->setFlash(__('You have no right to add news', true));
-			$this->redirect(array('action' => 'index'));
-		}
-	}
-	
-	function canAdd(){
-		return $this->isNormalAdministrator();
 	}
 	
 	function addNewsAndRedirectToProperPageIfSuccessfullyAdd(){	
@@ -128,12 +98,12 @@ class NewsController extends AppController {
 		}
 		
 		if(!empty($this->data))
-			$this->doEdit($newsId);
+			$this->editNewsIfHavingRight($newsId);
 		else
 			$this->data = $this->News->read(null, $newsId);
 	}
 	
-	function doEdit($newsId){
+	function editNewsIfHavingRight($newsId){
 		if($this->canEdit($newsId))
 			$this->editNewsAndRedirectToProperPageIfSuccesfullyEdit();
 		else{
@@ -143,12 +113,8 @@ class NewsController extends AppController {
 	}
 
 	function canEdit($newsId){
-		if($this->isNormalAdministrator()){
-			$administrator = $this->Session->read('administrator');
-			return $this->isNewsSender($administrator, $newsId);
-		}
-		else
-			return false;
+		$administrator = $this->Session->read('administrator');
+		return $this->isNewsSender($administrator, $newsId);
 	}
 	
 	
@@ -186,12 +152,8 @@ class NewsController extends AppController {
 	}
 	
 	function canDelete($newsId){
-		if($this->isNormalAdministrator()){
-			$administrator = $this->Session->read('administrator');
-			return $this->isNewsSender($administrator, $newsId);
-		}
-		else
-			return false;
+		$administrator = $this->Session->read('administrator');
+		return $this->isNewsSender($administrator, $newsId);
 	}
 	
 	function deleteNewsAndRedirectToProperPageIfSuccesfullyDelete($newsId){

@@ -49,6 +49,7 @@
 	<h3><?php __('Actions'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('New Group Relation', true), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('Go Back', true), array('controller' => 'administrators', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Groups', true), array('controller' => 'groups', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Group Owner', true), array('controller' => 'groups', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

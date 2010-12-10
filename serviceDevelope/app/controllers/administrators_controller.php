@@ -2,7 +2,7 @@
 class AdministratorsController extends AppController {
 
 	var $name = 'Administrators';
-	var $components = array('Acl');
+	//var $components = array('Acl');
 
 	function login(){
 		//$this->set('administratora', $this->params);
@@ -82,20 +82,9 @@ class AdministratorsController extends AppController {
 		$this->redirect(array('action' => 'login'));
 	}//***************************************************index***********************************************
 	function index() {
-		if($this->canViewAdministratorList())
-			$this->indexAdministrators();
-		else{
-			$this->Session->setFlash(__('You have no right to view the administrator list', true));
-			$this->redirect(array('action' => 'logout'));
-		}
+		$this->indexAdministrators();
 	}
 
-	function canViewAdministratorList(){
-		return $this->isSuperAdministrator();
-	}
-	
-
-	
 	function indexAdministrators(){
 		$this->Administrator->recursive = 0;
 		$this->set('administrators', $this->indexAdministratorPaginated());
@@ -113,16 +102,7 @@ class AdministratorsController extends AppController {
 			$this->redirect(array('action' => 'index'));
 		}
 			
-		if($this->canView())
-			$this->viewAdministrator($administratorId);
-		else{
-			$this->Session->setFlash(__('You have no right to view administrators', true));
-			$this->redirect(array('controller' => 'News', 'action' => 'index'));
-		}
-	}
-
-	function canView(){
-		return $this->isSuperAdministrator();
+		$this->viewAdministrator($administratorId);
 	}
 	
 	function isExistAdministrator($administratorId){
@@ -146,23 +126,14 @@ class AdministratorsController extends AppController {
 //************************************************add*******************************************************	
 	function add() {
 		if(!empty($this->data))
-			$this->doAdd();
+			$this->addAdministratorAndRedirectToProperPageIfSuccessfullyAdd();
+			
+		$this->listGroupNameInView();
+	}
 	
+	function listGroupNameInView(){
 		$groups = $this->Administrator->Group->find('list');
 		$this->set(compact('groups'));
-	}
-	
-	function doAdd(){
-		if($this->canAdd())
-			$this->addAdministratorAndRedirectToProperPageIfSuccessfullyAdd();
-		else{
-			$this->Session->setFlash(__('You have no right to add administrator', true));
-			$this->redirect(array('controller' => 'News', 'action' => 'index'));
-		}
-	}
-	
-	function canAdd(){
-		return $this->isSuperAdministrator();
 	}
 	
 	function addAdministratorAndRedirectToProperPageIfSuccessfullyAdd(){
@@ -213,26 +184,11 @@ class AdministratorsController extends AppController {
 		}
 		
 		if(!empty($this->data))
-			$this->doEdit($administratorId);
+			$this->editAdministratorAndRedirectToProperPageIfSuccesfullyEdit($administratorId);
 		else
 			$this->data = $this->Administrator->read(null, $administratorId);
 		
-		$groups = $this->Administrator->Group->find('list');
-		$this->set(compact('groups'));	
-	}
-	
-	function doEdit($administratorId){
-		if($this->canEdit()){
-			$this->editAdministratorAndRedirectToProperPageIfSuccesfullyEdit($administratorId);
-		}
-		else{
-			$this->Session->setFlash(__('You have no right to edit the administrator', true));
-			$this->redirect(array('controller' => 'News', 'action' => 'index'));
-		}
-	}
-	
-	function canEdit(){
-		return $this->isSuperAdministrator();
+		$this->listGroupNameInView();	
 	}
 	
 	function editAdministratorAndRedirectToProperPageIfSuccesfullyEdit($administratorId){
@@ -260,16 +216,7 @@ class AdministratorsController extends AppController {
 			$this->redirect(array('action' => 'index'));
 		}
 		
-		if($this->canDelete())
-			$this->deleteAdministratorAndRedirectToProperPageIfSuccesfullyDelete($administratorId);
-		else{
-			$this->Session->setFlash(__('You have no right to delete the administrator', true));
-			$this->redirect(array('controller' => 'News', 'action' => 'index'));
-		}
-	}
-	
-	function canDelete(){
-		return $this->isSuperAdministrator();
+		$this->deleteAdministratorAndRedirectToProperPageIfSuccesfullyDelete($administratorId);
 	}
 	
 	function deleteAdministratorAndRedirectToProperPageIfSuccesfullyDelete($administratorId){
@@ -277,7 +224,6 @@ class AdministratorsController extends AppController {
 		$this->redirectToProperPageDelete($deleteSuccessfully);
 	}
 	
-	//ÐÞ¸Äexist
 	function deleteAdministratorSuccessfully($administratorId){
 		$administratorAllRelated = $this->Administrator->findById($administratorId);
 		if($administratorAllRelated != null){
@@ -300,15 +246,13 @@ class AdministratorsController extends AppController {
 			$this->redirect(array('action' => 'index'));
 		}
 	}
-	//*************************************************Modify self**************************************
-	function modifySelf(){
+	//*************************************************Modify self**************************************	/*function modifySelf(){
 		if(!empty($this->data))
 			$this->doModify();
 		else
-			$this->data = $this->Administrator->read(null, ($this->Session->read('administrator'))['id']);
+			$this->data = $this->Administrator->read(null, $this->Session->read('administrator.id'));
 			
-		$groups = $this->Administrator->Group->find('list');
-		$this->set(compact('groups'));
+		$this->listGroupNameInView();
 	}
 	
 	function doModify(){
@@ -331,11 +275,11 @@ class AdministratorsController extends AppController {
 	function redirectToProperPageModify($success){
 		if($success){
 			$this->Session->setFlash(__('Successfully modify info of you', true));
-			$this->redirect('action' => 'index');
+			$this->redirect(array('action' => 'index'));
 		}
 		else
 			$this->Session->setFlash(__('Fail to modify info of you, please try again', true));
-	}
+	}*/
 	
 }
 ?>

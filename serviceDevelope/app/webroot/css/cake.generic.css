@@ -112,24 +112,12 @@ div.form,
 div.index,
 div.view {
 	float:right;
-	width:60%;
+	width:76%;
 	border-left:1px solid #666;
 	padding:10px 2%;
-	margin-right:125px;
-}
-div.index
-{
-	margin-right:125px;
-}
-div.form form
-{
-	margin-left:30px;
-	
-	
 }
 div.actions {
 	float:left;
-	margin-left:75px;
 	width:16%;
 	padding:10px 1.5%;
 }
@@ -160,10 +148,10 @@ th a {
 	text-decoration: none;
 }
 th a.asc:after {
-	content: ' 鈬�;
+	content: ' ⇣';
 }
 th a.desc:after {
-	content: ' 鈬�;
+	content: ' ⇡';
 }
 table tr td {
 	background: #fff;
@@ -179,11 +167,8 @@ table .altrow td {
 	background: #f5f5f5;
 }
 td.actions {
-	//text-align: center;
-	//white-space: nowrap;
-	width:200px;
-	margin-right:0px;
-	padding-left:0px;
+	text-align: center;
+	white-space: nowrap;
 }
 table td.actions a {
 	margin: 0px 6px;
@@ -241,10 +226,9 @@ dd {
 /** Forms **/
 form {
 	clear: both;
-	margin:0 auto;
-	padding: 20px;
-	width: 60%;
-	border:1px solid #cccccc;
+	margin-right: 20px;
+	padding: 0;
+	width: 95%;
 }
 fieldset {
 	border: 1px solid #ccc;
@@ -548,18 +532,4 @@ div.code-coverage-results span.result-ok {
 }
 div.code-coverage-results span.result-good {
 	color: #0a0;
-}
-
-#AdministratorLoginForm form
-{
-	width: 30%;
-}
-
-#AdministratorLoginForm h2
-{
-	text-align:center;
-	width:415px;
-	margin-left:412px;
-	background:#cccccc;
-	margin-bottom:0px;
 }

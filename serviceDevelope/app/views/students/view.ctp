@@ -6,9 +6,9 @@
 			<?php echo $student['Student']['id']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Name'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('StudentName'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $student['Student']['name']; ?>
+			<?php echo $student['Student']['studentName']; ?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Password'); ?></dt>
@@ -18,7 +18,7 @@
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Group'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $this->Html->link($student['Group']['name'], array('controller' => 'groups', 'action' => 'view', $student['Group']['id'])); ?>
+			<?php echo $this->Html->link($student['Group']['id'], array('controller' => 'groups', 'action' => 'view', $student['Group']['id'])); ?>
 			&nbsp;
 		</dd>
 	</dl>

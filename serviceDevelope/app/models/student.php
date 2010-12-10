@@ -2,7 +2,7 @@
 class Student extends AppModel {
 	var $name = 'Student';
 	var $validate = array(
-		'name' => array(
+		'studentName' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
 				//'message' => 'Your custom message here',

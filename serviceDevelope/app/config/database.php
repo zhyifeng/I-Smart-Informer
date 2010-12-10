@@ -77,8 +77,8 @@ class DATABASE_CONFIG {
 		'driver' => 'mysql',
 		'persistent' => false,
 		'host' => 'localhost',
-		'login' => 'qqibrow',
-		'password' => '196266',
+		'login' => 'root',
+		'password' => '123456',
 		'database' => 'androidserver',
 		'prefix' => '',
 	);

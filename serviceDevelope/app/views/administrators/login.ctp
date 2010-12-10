@@ -1,5 +1,10 @@
-<div id = "AdministratorLoginForm">
-<h2><?php __('Login');?></h2>
+<?php
+if (isset($error)) {
+  echo('Invalid Login.');
+}
+?>
+
+<p>Please log in.</p>
 <?php echo $form->create('Administrator', array('action' => 'login')); ?>
 
 <?php
@@ -8,4 +13,7 @@
 ?>
 
 <?php echo $form->end('Login');?>
-</div>
+<pre>
+<?php var_dump($administratora);
+ ?>
+</pre>
