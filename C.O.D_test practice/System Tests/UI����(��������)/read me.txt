@@ -1,0 +1,3 @@
+Ad.doc是手动测试UI界面的测试报告
+auto_UITest是使用Selenium 进行自动测试的测试报告
+UI_tours scripts文件夹是存放了UI自动测试的tours scripts

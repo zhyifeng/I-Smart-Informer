@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:id="@+id/RelativeLayout01" 
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent" 
+    >
+<EditText android:hint="input keyword" 
+          android:id="@+id/EditText_Search" 
+          android:layout_centerHorizontal="true" 
+          android:layout_alignParentTop="true"
+          android:layout_width="300dip" 
+          android:layout_height="wrap_content">
+          </EditText>
+<RadioGroup android:id="@+id/RadioGroup_Type" 
+            android:orientation="horizontal" 
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/EditText_Search" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content">
+            <RadioButton android:text="学校" 
+                         android:id="@+id/RadioButton_College" 
+                         android:layout_width="wrap_content" 
+                         android:layout_height="wrap_content">
+                         </RadioButton>
+            <RadioButton android:text="学院" 
+                         android:id="@+id/RadioButton_School" 
+                         android:layout_marginLeft="10dip"
+                         android:layout_width="wrap_content" 
+                         android:layout_height="wrap_content">
+                         </RadioButton>
+            <RadioButton android:text="班级" 
+                         android:id="@+id/RadioButton_Class" 
+                         android:layout_marginLeft="10dip"
+                         android:layout_width="wrap_content" 
+                         android:layout_height="wrap_content">
+                         </RadioButton>
+</RadioGroup>
+<Button android:text="搜索" 
+        android:id="@+id/Button_Search" 
+        android:layout_centerInParent="true"
+        android:layout_below="@id/RadioGroup_Type" 
+        android:layout_marginTop="200dip"
+        android:layout_width="150dip" 
+        android:layout_height="wrap_content">
+        </Button>
+<GridView android:id="@+id/GridView_toolbar_search" 
+          android:layout_alignParentBottom="true" 
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content">
+          </GridView>
+</RelativeLayout>

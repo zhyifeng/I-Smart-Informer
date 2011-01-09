@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"   
+    android:orientation="vertical" 
+    android:background="@drawable/bg"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+<TextView android:text="学号" 
+          android:id="@+id/UserNameTag" 
+          android:textColor="@color/black"
+          android:layout_marginLeft="28dip"
+          android:layout_marginTop="40dip"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content">
+          </TextView>
+<EditText android:hint="输入你的学号" 
+          android:id="@+id/EditID" 
+          android:layout_marginLeft="28dip"
+          android:layout_width="250dip" 
+          android:layout_height="wrap_content">
+          </EditText>
+<TextView android:text="密码" 
+          android:textColor="@color/black"
+          android:id="@+id/UserPassTag" 
+          android:layout_marginLeft="28dip"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content">
+          </TextView>
+<EditText android:hint="输入你的密码" 
+          android:password="true"
+          android:id="@+id/EditPassword" 
+          android:layout_marginLeft="28dip"
+          android:layout_width="250dip" 
+          android:layout_height="wrap_content">
+          </EditText>
+<CheckBox android:text="记住我" 
+          android:textSize="15dip"
+          android:id="@+id/CheckRemember" 
+          android:textColor="@color/black"
+          android:layout_marginLeft="28dip"
+          android:layout_marginTop="5dip"
+          android:layout_width="fill_parent" 
+          android:layout_height="wrap_content">
+          </CheckBox>
+<LinearLayout android:id="@+id/LinearLayout01" 
+              android:orientation="horizontal"
+              android:layout_width="wrap_content" 
+              android:layout_height="wrap_content">
+              <Button android:text="登 录" 
+                      android:id="@+id/LoginButt" 
+                      android:layout_marginLeft="28dip"
+                      android:layout_width="wrap_content" 
+                      android:layout_height="wrap_content">
+                      </Button>
+              <Button android:text="退 出" 
+                      android:id="@+id/CancelButt" 
+                      android:layout_marginLeft="28dip"
+                      android:layout_width="wrap_content" 
+                      android:layout_height="wrap_content">
+                      </Button>
+</LinearLayout>
+
+</LinearLayout>

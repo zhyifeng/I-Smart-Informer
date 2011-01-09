@@ -1,0 +1,11 @@
+#newsForm
+{
+	width:70%;
+	float:right;
+	margin-right:0px;
+}
+#newsForm form
+{
+	width:70%;
+	border:none;
+}
